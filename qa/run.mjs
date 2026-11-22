@@ -15,7 +15,7 @@ import { checkDepth } from "./depth-check.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok: !!ok, detail: String(detail).slice(0, 400) });
-const firstClose = async (q) => { if (await q.locator("#howto[open]").count()) await q.click("#howto-ok"); if (await q.locator("#core-coach").count()) { await q.evaluate(() => Core.coach.leave()); await q.waitForTimeout(100); } }; // はじめての練習の吹き出しをやめてホームへ（sync-template の migrateFirstQa が足した）
+const firstClose = async (q) => { if (await q.locator("#howto[open]").count()) await q.click("#howto-ok"); if (await q.evaluate(() => !!(window.Core && Core.coach && Core.coach.active()))) { await q.evaluate(() => { Core.coach.leave(); scrollTo(0, 0); }); await q.waitForTimeout(100); } }; // はじめての練習の吹き出しをやめてホームへ（sync-template の migrateFirstQa が足した）
 const G = createRequire(import.meta.url)(path.join(root, "data.js"));
 
 const PINS = "kuro-dosha0:2.3.0:0.1,doshamap:0:4.1,ki-kozui1:3.2.1:1.2.3,shinsuimap:2:3.4.1,murasaki-dosha2:3.1.2:1.3.0,kuro-kozui2:1.2.0:2.0.1,aka-kozui2:3.3.2:0.2.3,ryuiki:0:3.0.2;kuro-dosha0:1.2.1:1.0,doshamap:0:1.4,ki-dosha1:0.3.2:2.3.1,lv4name:0:0.3.4,hyomen:2:3.4.1,ki-kozui2:3.3.2:1.3.2,km15:2:2.4.0,murasaki-shinsui2:3.2.1:3.1.0;doshamap:0:0.1,kuro-dosha0:3.2.1:1.0,ki-kozui1:1.3.1:3.1.2,murasaki-shinsui1:0.1.1:1.0.3,murasaki-shinsui2:3.2.1:1.3.0,ki-kozui2:3.0.0:1.3.2,kuro-kozui2:0.0.2:2.0.1,r4:1:4.0.1"; // 過去の日の問題の印（変わったら過去の日の問題が変わった印。種類・言い方は足すだけでも変わる）
