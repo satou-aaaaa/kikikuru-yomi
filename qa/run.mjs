@@ -105,8 +105,8 @@ check("乱数は sort の比較の中で引かない（ブラウザで引く回�
 { const inl = html.split("<script>").slice(1).map((x) => x.split("</" + "script>")[0]).join("\n"); // index.html の中の script も見る（nemuri-kotsu#1 で行の途中に // を入れて画面が動かなくなった）
   check("一行の式の途中にコメント // を足さない（行の残りが消える。rosen-hitofude 2026-11-04・nemuri-kotsu#1）", !/;\s*\/\/[^\n]*;\s*\w/.test((gen + "\n" + inl).split("\n").filter((l) => !l.trim().startsWith("//")).join("\n"))); }
 check("言い方：「絶対」と言い切らない", !/絶対に安全|絶対に来ない|必ず上陸/.test(html + gen + readme));
-{ const howto = (html.match(/<dialog id="howto"[\s\S]*?<\/dialog>/) || [""])[0], ab = (html.match(/function about\(\)[\s\S]*?\n}/) || [""])[0], dis = (t) => /防災の助言/.test(t) && /公式の情報の代わりではありません/.test(t) && /気象庁/.test(t);
-  check("言い方：遊び方・「このゲームについて」・README のどれにも、防災の助言・公式の情報の代わりではないこと・本当の大雨のときは気象庁で確かめることがある", dis(howto) && dis(ab) && dis(readme), `遊び方 ${dis(howto)}・について ${dis(ab)}・README ${dis(readme)}`); }
+{ const howto = (html.match(/<dialog id="howto"[\s\S]*?<\/dialog>/) || [""])[0], ab = (html.match(/function about\(\)[\s\S]*?\n}/) || [""])[0], dis = (t) => /防災の助言/.test(t) && /公式の情報の代わりではありません/.test(t) && /気象庁/.test(t) && /市町村の避難情報/.test(t);
+  check("言い方：遊び方・「このゲームについて」・README のどれにも、防災の助言・公式の情報の代わりではないこと・本当の大雨のときは気象庁と市町村の避難情報で確かめることがある", dis(howto) && dis(ab) && dis(readme), `遊び方 ${dis(howto)}・について ${dis(ab)}・README ${dis(readme)}`); }
 check("写し元（突風よみ）の言葉が残っていない（game-dev.md A 手順5）", !/突風|竜巻|JEF|風速|toppu|tpy-|TPY/.test(html.replace(/<!-- a11y:begin[\s\S]*?a11y:end -->/, "").replace(/<!-- store:begin[\s\S]*?store:end -->/, "").replace(/<!-- core:begin[\s\S]*?core:end -->/, "") + gen + readme));
 check("画面にお笑いの言葉を入れない（本物っぽく）", !/お笑い|ギャグ|ツッコミ|なんでやねん|（うそ）/.test(html + gen));
 check("引き継ぎ：transfer.js をゲームの script より前に、このゲームの記録のキー（記録・文字・復習）だけで読む・depth.js も前に読む", /<script src="transfer\.js" data-game="kikikuru-yomi" data-keys="kkr-v1,kkr-fs,kkr-depth"><\/script>\s*<script src="depth\.js" data-game="kikikuru-yomi" data-key="kkr-depth"><\/script>\s*<\/head>/.test(html) && html.indexOf('src="transfer.js"') < html.indexOf('src="data.js"') && /data-hk/.test(html) && existsSync(path.join(root, "transfer.js")));
